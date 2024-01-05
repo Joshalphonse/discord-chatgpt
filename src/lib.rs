@@ -1,5 +1,5 @@
 use std::env;
-use discord_flows::{model::Message, Bot, ProvidedBot, message_handler};
+use discord_flows::{model::{Message, GuildMemberAdd}, Bot, ProvidedBot, message_handler};
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
@@ -20,7 +20,7 @@ pub async fn on_deploy() {
 async fn handler(msg: Message) {
     logger::init();
     let token = env::var("discord_token").unwrap();
-    let placeholder_text = env::var("placeholder").unwrap_or("Learning...".to_string());
+    let placeholder_text = env::var("placeholder").unwrap_or("Typing ...".to_string());
     let system_prompt = env::var("system_prompt").unwrap_or("You are a helpful assistant answering questions on Discord.".to_string());
 
     let bot = ProvidedBot::new(token);
@@ -89,4 +89,14 @@ async fn handler(msg: Message) {
         }
     }
 
+}
+
+async fn welcome_new_member(new_member: GuildMemberAdd) {
+    let welcome_message = "Welcome to the server!"; // Customize your welcome message
+
+    if let Some(user) = new_member.user {
+        if let Err(why) = user.dm(&discord, |m| m.content(welcome_message)).await {
+            log::error!("Error sending welcome DM: {:?}", why);
+        }
+    }
 }
