@@ -1,5 +1,5 @@
 use std::env;
-use discord_flows::{model::{Message, GuildMemberAdd}, Bot, ProvidedBot, message_handler};
+use discord_flows::{model::{Message, GuildMemberAddEvent}, Bot, ProvidedBot, message_handler};
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
@@ -91,7 +91,7 @@ async fn handler(msg: Message) {
 
 }
 
-async fn welcome_new_member(new_member: GuildMemberAdd) {
+async fn welcome_new_member(new_member: GuildMemberAddEvent) {
     let welcome_message = "Welcome to the server!"; // Customize your welcome message
 
     if let Some(user) = new_member.user {
