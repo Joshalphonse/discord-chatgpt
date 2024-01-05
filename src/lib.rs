@@ -94,7 +94,7 @@ async fn handler(msg: Message) {
 async fn welcome_new_member(new_member: GuildMemberAddEvent) {
     let welcome_message = "Welcome to the server!"; // Customize your welcome message
 
-    if let Some(user) = new_member.user {
+    if let Some(user) = new_member.member.user {
         if let Err(why) = user.dm(&discord, |m| m.content(welcome_message)).await {
             log::error!("Error sending welcome DM: {:?}", why);
         }
