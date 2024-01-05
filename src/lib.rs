@@ -1,5 +1,5 @@
 use std::env;
-use discord_flows::{model::{Message, GuildMemberAddEvent, User}, Bot, ProvidedBot, message_handler};
+use discord_flows::{model::{Message, GuildMemberAddEvent, Member, User}, Bot, ProvidedBot, message_handler};
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
