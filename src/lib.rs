@@ -20,7 +20,7 @@ pub async fn on_deploy() {
 async fn handler(msg: Message) {
     logger::init();
     let token = env::var("discord_token").unwrap();
-    let placeholder_text = env::var("placeholder").unwrap_or("Typing ...".to_string());
+    let placeholder_text = env::var("placeholder").unwrap_or("Learning...".to_string());
     let system_prompt = env::var("system_prompt").unwrap_or("You are a helpful assistant answering questions on Discord.".to_string());
 
     let bot = ProvidedBot::new(token);
