@@ -1,5 +1,5 @@
 use std::env;
-use discord_flows::{model::{Message, GuildMemberAddEvent, Member, User}, Bot, ProvidedBot, message_handler};
+use discord_flows::{model::Message, Bot, ProvidedBot, message_handler};
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
@@ -89,17 +89,4 @@ async fn handler(msg: Message) {
         }
     }
 
-}
-
-async fn welcome_new_member(new_member: GuildMemberAddEvent, discord: Arc<CacheAndHttp>) {
-    let welcome_message = "Welcome to the server!"; // Customize your welcome message
-
-    // Correct handling of the Option type for new_member.member
-    if let Some(member) = new_member.member {
-        // Assuming member.user is a User, not an Option<User>
-        let user = member.user;
-        if let Err(why) = user.dm(&discord, |m| m.content(welcome_message)).await {
-            log::error!("Error sending welcome DM: {:?}", why);
-        }
-    }
 }
