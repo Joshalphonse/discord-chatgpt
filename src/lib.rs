@@ -25,16 +25,17 @@ async fn handler(msg: Message) {
 
     let bot = ProvidedBot::new(token);
     let discord = bot.get_client();
+
+    if !msg.mentions.iter().any(|user| user.id == bot.user_id) {
+        return; // If the bot is not mentioned, do nothing
+    }
+    
     if msg.author.bot {
         log::info!("ignored bot message");
         return;
     }
     let channel_id = msg.channel_id;
     let content = msg.content;
-
-     if !msg.mentions.iter().any(|user| user.id == discord.cache.current_user_id().await) {
-        return; // If the bot is not mentioned, do nothing
-    }
 
     if content.eq_ignore_ascii_case("/restart") {
         _ = discord.send_message(
