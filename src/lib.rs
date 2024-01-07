@@ -1,5 +1,6 @@
 use std::env;
 use discord_flows::{model::Message, Bot, ProvidedBot, message_handler};
+use discord_flows::model::GuildMemberAddEvent;
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
@@ -26,10 +27,17 @@ async fn handler(msg: Message) {
     let bot = ProvidedBot::new(token);
     let discord = bot.get_client();
 
-    if !msg.mentions.iter().any(|user| user.id == bot.user_id) {
-        return; // If the bot is not mentioned, do nothing
+    let welcome_message = "Welcome to the server!";
+
+    if let Some(member) = new_member.member {
+        if let Some(user_id) = member.user_id {
+            if let Err(why) = discord.create_dm_channel(user_id).await.and_then(|channel| channel.say(&discord, welcome_message).await) {
+                log::error!("Error sending welcome DM: {:?}", why);
+            }
+        }
     }
-    
+
+
     if msg.author.bot {
         log::info!("ignored bot message");
         return;
