@@ -92,7 +92,7 @@ async fn handler(msg: Message) {
 
 }
 
-#[message_handler]
+
 async fn new_member_handler(new_member: GuildMemberAddEvent) {
     let welcome_message = "Welcome to the server!";
     // ... Logic to send a DM to the new member ...
