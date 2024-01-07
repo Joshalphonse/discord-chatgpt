@@ -92,7 +92,7 @@ async fn handler(msg: Message) {
 
 }
 
-#[message_handler]
+
 async fn welcome_new_member(new_member: GuildMemberAddEvent) {
     // Initialize logger and bot client
     logger::init();
