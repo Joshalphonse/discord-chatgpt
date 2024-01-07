@@ -92,20 +92,9 @@ async fn handler(msg: Message) {
 
 }
 
-
-async fn welcome_new_member(new_member: GuildMemberAddEvent) {
-    // Initialize logger and bot client
-    logger::init();
-    let bot = ProvidedBot::new(env::var("discord_token").unwrap());
-    let discord = bot.get_client();
-
+#[message_handler]
+async fn new_member_handler(new_member: GuildMemberAddEvent) {
     let welcome_message = "Welcome to the server!";
-
-    if let Some(member) = new_member.member {
-        if let Some(user_id) = member.user_id {
-            if let Err(why) = discord.create_dm_channel(user_id).await.and_then(|channel| channel.say(&discord, welcome_message).await) {
-                log::error!("Error sending welcome DM: {:?}", why);
-            }
-        }
-    }
+    // ... Logic to send a DM to the new member ...
+    // This part will depend on how discord_flows handles new member events and DMs.
 }
