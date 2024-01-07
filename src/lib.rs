@@ -26,18 +26,6 @@ async fn handler(msg: Message) {
 
     let bot = ProvidedBot::new(token);
     let discord = bot.get_client();
-
-    let welcome_message = "Welcome to the server!";
-
-    if let Some(member) = new_member.member {
-        if let Some(user_id) = member.user_id {
-            if let Err(why) = discord.create_dm_channel(user_id).await.and_then(|channel| channel.say(&discord, welcome_message).await) {
-                log::error!("Error sending welcome DM: {:?}", why);
-            }
-        }
-    }
-
-
     if msg.author.bot {
         log::info!("ignored bot message");
         return;
@@ -102,4 +90,22 @@ async fn handler(msg: Message) {
         }
     }
 
+}
+
+#[message_handler]
+async fn welcome_new_member(new_member: GuildMemberAddEvent) {
+    // Initialize logger and bot client
+    logger::init();
+    let bot = ProvidedBot::new(env::var("discord_token").unwrap());
+    let discord = bot.get_client();
+
+    let welcome_message = "Welcome to the server!";
+
+    if let Some(member) = new_member.member {
+        if let Some(user_id) = member.user_id {
+            if let Err(why) = discord.create_dm_channel(user_id).await.and_then(|channel| channel.say(&discord, welcome_message).await) {
+                log::error!("Error sending welcome DM: {:?}", why);
+            }
+        }
+    }
 }
