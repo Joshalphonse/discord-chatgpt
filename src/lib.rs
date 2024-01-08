@@ -1,5 +1,5 @@
 use std::env;
-use discord_flows::{{model::Message, User}, Bot, ProvidedBot, message_handler, model::UserId};
+use discord_flows::{{model::Message, User, Mention}, Bot, ProvidedBot, message_handler, model::UserId};
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
@@ -35,11 +35,9 @@ async fn handler(msg: Message) {
     let bot_id = 1192905752671699055;
 
     // Check if the bot is mentioned in the message
-    let is_mentioned = msg.mentions.iter().any(|mention| {
-        match mention {
-            discord_flows::model::Mention::User(UserId) => *id == bot_id,
-            _ => false,
-        }
+    let is_mentioned = msg.mentions.iter().any(|mention| match mention {
+        discord_flows::model::Mention::User { id, .. } => *id == bot_id,
+        _ => false,
     });
     
     if !is_mentioned {
