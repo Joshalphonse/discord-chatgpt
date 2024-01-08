@@ -37,7 +37,7 @@ async fn handler(msg: Message) {
     // Check if the bot is mentioned in the message
     let is_mentioned = msg.mentions.iter().any(|mention| {
         match mention {
-            discord_flows::model::Mention::User(id) => *id == bot_id,
+            discord_flows::model::Mention::UserId(id) => *id == bot_id,
             _ => false,
         }
     });
