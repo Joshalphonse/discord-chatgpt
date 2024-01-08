@@ -1,5 +1,5 @@
 use std::env;
-use discord_flows::{model::Message, Bot, ProvidedBot, message_handler, model::User};
+use discord_flows::{model::Message, Bot, ProvidedBot, message_handler};
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
@@ -26,7 +26,13 @@ async fn handler(msg: Message) {
     let bot = ProvidedBot::new(token);
     let discord = bot.get_client();
 
-    
+    if !content.starts_with("!bot") {
+        return; // If the message doesn't start with the command keyword, do nothing
+    }
+
+    // Strip the command keyword from the message content
+    let content = content.strip_prefix("!bot").unwrap_or("").trim();
+
     if msg.author.bot {
         log::info!("ignored bot message");
         return;
@@ -44,10 +50,6 @@ async fn handler(msg: Message) {
         store::set(&channel_id.to_string(), json!(true), None);
         log::info!("Restarted converstion for {}", channel_id);
         return;
-    }
-
-    if !msg.mentions.iter().any(|user| user.id == discord.cache.current_user_id().await) {
-        return; // If the bot is not mentioned, do nothing
     }
 
     let restart = store::get(&channel_id.to_string())
