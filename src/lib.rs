@@ -30,15 +30,25 @@ async fn handler(msg: Message) {
         log::info!("ignored bot message");
         return;
     }
-    let channel_id = msg.channel_id;
-    let content = msg.content;
 
-        if !content.starts_with("!bot") {
-        return; // If the message doesn't start with the command keyword, do nothing
+    // Assuming you have the bot's user ID
+    let bot_id = "1192905752671699055";
+
+    // Check if the bot is mentioned in the message
+    let is_mentioned = msg.mentions.iter().any(|mention| {
+        match mention {
+            discord_flows::model::Mention::User(id) => *id == bot_id,
+            _ => false,
+        }
+    });
+    
+    if !is_mentioned {
+        log::info!("Bot not mentioned, ignoring message.");
+        return; // If the bot is not mentioned, do nothing
     }
 
-    // Strip the command keyword from the message content
-    let content = content.strip_prefix("!bot").unwrap_or("").trim();
+    let channel_id = msg.channel_id;
+    let content = msg.content;
 
     if content.eq_ignore_ascii_case("/restart") {
         _ = discord.send_message(
