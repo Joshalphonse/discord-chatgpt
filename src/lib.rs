@@ -1,5 +1,5 @@
 use std::env;
-use discord_flows::{{model::Message, User, Mention}, Bot, ProvidedBot, message_handler, model::UserId};
+use discord_flows::{{model::Message, User, Mention,}, Bot, ProvidedBot, message_handler, model::UserId};
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
