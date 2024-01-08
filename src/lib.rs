@@ -34,10 +34,10 @@ async fn handler(msg: Message) {
     let content = msg.content;
 
     // Check if the bot is mentioned
-    if !msg.mentions.iter().any(|user| user.id == discord.cache.current_user_id().await) {
+    if !msg.mentions.iter().any(|user| user.id == discord.token.current_user_id().await) {
         return; // If the bot is not mentioned, do nothing
     }
-    
+
     if content.eq_ignore_ascii_case("/restart") {
         _ = discord.send_message(
             channel_id.into(),
