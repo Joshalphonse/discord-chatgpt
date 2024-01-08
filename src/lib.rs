@@ -7,6 +7,8 @@ use openai_flows::{
 };
 use store_flows as store;
 use serde_json::json;
+use serenity::model::mention::Mention;
+
 
 #[no_mangle]
 #[tokio::main(flavor = "current_thread")]
@@ -36,7 +38,7 @@ async fn handler(msg: Message) {
 
     // Check if the bot is mentioned in the message
     let is_mentioned = msg.mentions.iter().any(|mention| match mention {
-        discord_flows::model::Mention::User { id, .. } => *id == bot_id,
+        discord_flows::model::Mention::User(UserId) => *id == bot_id,
         _ => false,
     });
     
