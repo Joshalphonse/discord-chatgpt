@@ -1,6 +1,5 @@
 use std::env;
-use discord_flows::{model::Message, Bot, ProvidedBot, message_handler};
-use discord_flows::model::GuildMemberAddEvent;
+use discord_flows::{model::Message, Bot, ProvidedBot, message_handler, model::User};
 use flowsnet_platform_sdk::logger;
 use openai_flows::{
     chat::{ChatModel, ChatOptions},
@@ -26,6 +25,8 @@ async fn handler(msg: Message) {
 
     let bot = ProvidedBot::new(token);
     let discord = bot.get_client();
+
+    
     if msg.author.bot {
         log::info!("ignored bot message");
         return;
@@ -43,6 +44,10 @@ async fn handler(msg: Message) {
         store::set(&channel_id.to_string(), json!(true), None);
         log::info!("Restarted converstion for {}", channel_id);
         return;
+    }
+
+    if !msg.mentions.iter().any(|user| user.id == discord.cache.current_user_id().await) {
+        return; // If the bot is not mentioned, do nothing
     }
 
     let restart = store::get(&channel_id.to_string())
@@ -90,11 +95,4 @@ async fn handler(msg: Message) {
         }
     }
 
-}
-
-
-async fn new_member_handler(new_member: GuildMemberAddEvent) {
-    let welcome_message = "Welcome to the server!";
-    // ... Logic to send a DM to the new member ...
-    // This part will depend on how discord_flows handles new member events and DMs.
 }
