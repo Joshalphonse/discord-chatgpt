@@ -33,10 +33,12 @@ async fn handler(msg: Message) {
     let channel_id = msg.channel_id;
     let content = msg.content;
 
-    // Check if the bot is mentioned
-    if !msg.mentions.iter().any(|user| user.id == discord.token.current_user_id().await) {
-        return; // If the bot is not mentioned, do nothing
+        if !content.starts_with("!bot") {
+        return; // If the message doesn't start with the command keyword, do nothing
     }
+
+    // Strip the command keyword from the message content
+    let content = content.strip_prefix("!bot").unwrap_or("").trim();
 
     if content.eq_ignore_ascii_case("/restart") {
         _ = discord.send_message(
